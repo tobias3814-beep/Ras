@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* Themes: every colour is a CSS variable, set per theme on <html data-theme="…"> (see theme.ts).
+   Components were written dark-first (text-slate-200 = primary ink, slate-500 = muted, …): light themes flip the
+   slate scale (low numbers = dark ink), dark themes keep Tailwind's own. Charts / 3D read the --chart-* / --fig-* vars.
+   Default below = Light purple. */
+@theme {
+  --color-hud-bg: #f6f2fd;
+  --color-hud-panel: #ffffff;
+  --color-hud-line: #e3d9f6;
+  --color-hud-accent: #7c3aed;
+  --color-hud-scalp: #a21caf;
+  --color-hud-amber: #b45309;
+  --color-hud-red: #dc2626;
+  --color-hud-green: #15803d;
+
+  --color-slate-50: #1c1530;
+  --color-slate-100: #241b3d;
+  --color-slate-200: #2c2347;
+  --color-slate-300: #3f3558;
+  --color-slate-400: #5b5175;
+  --color-slate-500: #6f6589; /* muted text: 5.3:1 on white */
+  --color-slate-600: #c8bde2;
+  --color-slate-700: #ddd3f1;
+  --color-slate-800: #ece6f8;
+  --color-slate-900: #f4f0fb;
+
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  --glow: #ede3fd;
+  /* chart chrome + marks (light: reference palette light steps; dark themes: its dark steps) */
+  --chart-text: #6f6589; --chart-grid: #f1ecfa; --chart-border: #e3d9f6;
+  --chart-up: #15803d; --chart-down: #dc2626;
+  --chart-gain: #2a78d6; --chart-loss: #eb6834; --chart-ref: #8a80a3; --chart-neutral: #f0efec;
+  --chart-y1: #2a78d6; --chart-y2: #eb6834; --chart-y3: #1baf7a;
+  /* the 3D figure */
+  --fig-body: #7c3aed; --fig-limb: #a78bfa; --fig-skin: #f5f3ff; --fig-shoe: #5b21b6; --fig-ink: #2c2347; --fig-mouth: #4c1d95;
+}
+
+[data-theme="light-blue"] {
+  --color-hud-bg: #f1f6fd; --color-hud-line: #d6e4f6; --color-hud-accent: #1d4ed8; --color-hud-scalp: #a21caf;
+  --color-slate-50: #0f1a2e; --color-slate-100: #14213a; --color-slate-200: #1b2a45; --color-slate-300: #2d3d5a;
+  --color-slate-400: #4a5a77; --color-slate-500: #5d6b85; --color-slate-600: #bccbe0; --color-slate-700: #d3deec;
+  --color-slate-800: #e6eef8; --color-slate-900: #f1f6fc;
+  --glow: #dfeafc; --chart-text: #5d6b85; --chart-grid: #eaf1fa; --chart-border: #d6e4f6; --chart-ref: #7d8aa3;
+  --fig-body: #1d4ed8; --fig-limb: #60a5fa; --fig-skin: #eff6ff; --fig-shoe: #1e3a8a; --fig-ink: #1b2a45; --fig-mouth: #1e3a8a;
+}
+
+/* ---- dark themes share Tailwind's slate scale, brighter status colours and the dark chart steps ---- */
+[data-theme="graphite"], [data-theme="purple-black"], [data-theme="red-black"], [data-theme="cyan-black"], [data-theme="blue-black"] {
+  --color-hud-amber: #ffb547; --color-hud-red: #ff4d6a; --color-hud-green: #3dffa8; --color-hud-scalp: #e879f9;
+  --color-slate-50: #f8fafc; --color-slate-100: #f1f5f9; --color-slate-200: #e2e8f0; --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8; --color-slate-500: #7c8aa0; --color-slate-600: #475569; --color-slate-700: #334155;
+  --color-slate-800: #1e293b; --color-slate-900: #0f172a;
+  --chart-up: #3dffa8; --chart-down: #ff4d6a;
+  --chart-gain: #1b9fbd; --chart-loss: #d0751f; --chart-ref: #64748b; --chart-neutral: #383835;
+  --chart-y1: #3987e5; --chart-y2: #d95926; --chart-y3: #199e70;
+  --fig-skin: #e8e6f0; --fig-ink: #0b0613;
+  color-scheme: dark;
+}
+
+[data-theme="graphite"] { /* the bot console: neutral graphite, sky accent kept apart from gain green and loss red */
+  --color-hud-bg: #090c11; --color-hud-panel: #10151d; --color-hud-line: #1f2733; --color-hud-accent: #4cc2ff;
+  --color-hud-green: #34d399; --color-hud-red: #f87171; --color-hud-amber: #fbbf24; --color-hud-scalp: #c084fc;
+  --color-slate-500: #8391a7; /* muted text: 5.6:1 on the panel */
+  --glow: #0e1620; --chart-text: #8391a7; --chart-grid: #141b25; --chart-border: #1f2733;
+  --chart-up: #34d399; --chart-down: #f87171;
+  --fig-body: #0ea5e9; --fig-limb: #7dd3fc; --fig-shoe: #0c4a6e; --fig-mouth: #082f49;
+}
+
+[data-theme="purple-black"] {
+  --color-hud-bg: #07040d; --color-hud-panel: #120a1f; --color-hud-line: #2a1a45; --color-hud-accent: #a78bfa;
+  --glow: #1a0f2e; --chart-text: #9d8fbd; --chart-grid: #1a1129; --chart-border: #2a1a45;
+  --fig-body: #8b5cf6; --fig-limb: #c4b5fd; --fig-shoe: #4c1d95; --fig-mouth: #2e1065;
+}
+
+[data-theme="red-black"] {
+  --color-hud-bg: #080404; --color-hud-panel: #150909; --color-hud-line: #3a1515; --color-hud-accent: #f87171;
+  --glow: #240b0b; --chart-text: #b89494; --chart-grid: #1c0d0d; --chart-border: #3a1515;
+  --fig-body: #dc2626; --fig-limb: #f87171; --fig-shoe: #7f1d1d; --fig-mouth: #450a0a;
+}
+
+[data-theme="cyan-black"] { /* the original HUD */
+  --color-hud-bg: #05080d; --color-hud-panel: #0a121c; --color-hud-line: #12303f; --color-hud-accent: #3fe0ff;
+  --glow: #0b1a26; --chart-text: #7fa9b8; --chart-grid: #0f2230; --chart-border: #12303f;
+  --fig-body: #0891b2; --fig-limb: #67e8f9; --fig-shoe: #164e63; --fig-mouth: #083344;
+}
+
+[data-theme="blue-black"] {
+  --color-hud-bg: #04060d; --color-hud-panel: #0a1020; --color-hud-line: #1c2a4a; --color-hud-accent: #60a5fa;
+  --glow: #0c1630; --chart-text: #8fa2c4; --chart-grid: #0f182c; --chart-border: #1c2a4a;
+  --fig-body: #2563eb; --fig-limb: #93c5fd; --fig-shoe: #1e3a8a; --fig-mouth: #172554;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at top, var(--glow) 0%, var(--color-hud-bg) 60%);
+  color: var(--color-slate-200);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* numbers, prices and codes stay monospaced so columns line up */
+.tabular-nums, code, kbd, pre { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* page titles: one calm style everywhere */
+main h2.text-lg { font-size: 1.375rem; line-height: 1.75rem; font-weight: 650; letter-spacing: 0.04em; color: var(--color-slate-100); }
+
+/* interaction: pointer, quick transitions, a visible ring for the keyboard */
+button, select, [role="button"], a { cursor: pointer; transition: color .15s, background-color .15s, border-color .15s, opacity .15s; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--color-hud-accent); outline-offset: 2px; border-radius: 6px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offset: 0; }
+.brain-banner { animation: brain-banner 7s ease-out forwards; }
+@keyframes brain-banner { 0% { opacity: 0; transform: translate(-50%, -8px); } 6%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, 0); } }
+.bot-ping { animation: bot-ping 1.8s cubic-bezier(0, 0, .2, 1) infinite; }
+@keyframes bot-ping { 75%, 100% { transform: scale(2.4); opacity: 0; } }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--color-hud-line); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Ras avatar: filled eye shapes, and a quick fade when the expression changes */
+.ras-face .fill { fill: currentColor; stroke: none; }
+.ras-face { animation: ras-face 0.14s ease-out; }
+@keyframes ras-face { from { opacity: 0.2; } to { opacity: 1; } }
+
+/* iPhone: keep clear of the notch and home bar */
+body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+
+@media (max-width: 767px) {
+  /* wide tables scroll inside their panel instead of stretching the page */
+  table { display: block; max-width: 100%; overflow-x: auto; }
+  #root > div > * { min-width: 0; max-width: 100%; }
+  .grid > *, .flex > * { min-width: 0; }
+  select, input { max-width: 100%; }
+}
+
+/* Ras Live: small life in the room */
+.live-twinkle { animation: live-twinkle 3.4s ease-in-out infinite; }
+@keyframes live-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+.live-pulse { animation: live-pulse 3s ease-in-out infinite; }
+@keyframes live-pulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.live-z { animation: live-z 3s ease-out infinite; opacity: 0; }
+@keyframes live-z { 0% { opacity: 0; transform: translateY(14px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-34px); } }
+.live-legs { animation: live-legs .5s linear infinite alternate; }
+@keyframes live-legs { to { transform: translateX(2px); } }
+.live-alarm { animation: live-alarm 1s ease-in-out infinite; pointer-events: none; }
+@keyframes live-alarm { 0%, 100% { opacity: .04; } 50% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .live-twinkle, .live-pulse, .live-legs, .live-alarm, .live-z, .bot-ping, .brain-banner { animation-duration: 0s; } }

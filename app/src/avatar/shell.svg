@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="ras-body" cx="42%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#f7f8f1"/><stop offset=".55" stop-color="#d9dcd0"/>
+      <stop offset=".82" stop-color="#8d927f"/><stop offset="1" stop-color="#3f4336"/>
+    </radialGradient>
+    <linearGradient id="ras-glass" x1=".12" y1="0" x2=".88" y2="1">
+      <stop offset="0" stop-color="#5b6543"/><stop offset=".5" stop-color="#2b3022"/><stop offset="1" stop-color="#0d0f0a"/>
+    </linearGradient>
+    <radialGradient id="ras-warm" cx="30%" cy="82%" r="60%">
+      <stop offset="0" stop-color="#a98f62" stop-opacity=".55"/><stop offset="1" stop-color="#a98f62" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ras-ear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b9bdad"/>
+    </linearGradient>
+    <linearGradient id="ras-plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6d7259"/><stop offset="1" stop-color="#23251e"/>
+    </linearGradient>
+    <radialGradient id="ras-vent" cx="50%" cy="50%" r="55%">
+      <stop offset="0" stop-color="#1b2110"/><stop offset=".55" stop-color="#46591f"/><stop offset="1" stop-color="#a6f52b"/>
+    </radialGradient>
+    <filter id="ras-neon" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <g id="ras-ear-shape">
+      <path d="M74 196 C72 136 84 62 106 22 C112 12 122 12 130 20 C166 50 208 92 236 126 L150 160 Z"
+            fill="url(#ras-ear)" stroke="#111" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M104 150 C102 116 108 76 118 50 C146 72 176 102 198 128 L146 146 Z" fill="#6f745e" stroke="#2d2f26" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M128 124 L128 80 L166 116 Z" fill="#26321a" stroke="#a6f52b" stroke-width="7" stroke-linejoin="round" filter="url(#ras-neon)"/>
+    </g>
+  </defs>
+
+  <!-- body -->
+  <circle cx="256" cy="282" r="212" fill="url(#ras-body)" stroke="#111" stroke-width="9"/>
+
+  <!-- ears -->
+  <use href="#ras-ear-shape"/>
+  <use href="#ras-ear-shape" transform="translate(512 0) scale(-1 1)"/>
+
+  <!-- side armour by the visor -->
+  <g id="ras-plates">
+    <path d="M45 268 C50 214 66 176 92 150 L124 184 C104 214 94 262 96 306 L58 330 C48 312 45 290 45 268 Z" fill="url(#ras-plate)" stroke="#111" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M60 266 L82 254 M60 280 L82 268 M61 294 L82 282" stroke="#c9cdb9" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="96" cy="182" r="6" fill="#1a1b16"/>
+    <path d="M467 268 C462 214 446 176 420 150 L388 184 C408 214 418 262 416 306 L454 330 C464 312 467 290 467 268 Z" fill="url(#ras-plate)" stroke="#111" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M452 266 L430 254 M452 280 L430 268 M451 294 L430 282" stroke="#c9cdb9" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="416" cy="182" r="6" fill="#1a1b16"/>
+  </g>
+
+  <!-- visor -->
+  <path d="M256 92 C352 92 412 150 414 236 C416 310 382 368 318 386 C278 396 234 396 194 386 C130 368 96 310 98 236 C100 150 160 92 256 92 Z"
+        fill="#c7c9a6" stroke="#111" stroke-width="7"/>
+  <path d="M256 106 C342 106 398 158 400 236 C402 302 370 354 312 372 C276 382 236 382 200 372 C142 354 110 302 112 236 C114 158 170 106 256 106 Z"
+        fill="url(#ras-glass)" stroke="#6f7a4d" stroke-width="3"/>
+  <path d="M256 106 C342 106 398 158 400 236 C402 302 370 354 312 372 C276 382 236 382 200 372 C142 354 110 302 112 236 C114 158 170 106 256 106 Z" fill="url(#ras-warm)"/>
+  <path d="M150 158 C176 130 214 118 254 118" fill="none" stroke="#ffffff" stroke-opacity=".22" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- lower armour -->
+  <path d="M112 392 C164 424 348 424 400 392" fill="none" stroke="#3a3c32" stroke-width="4"/>
+  <path d="M138 412 L132 438 L150 444 L158 420 Z M374 412 L380 438 L362 444 L354 420 Z" fill="#2c2e26" stroke="#111" stroke-width="2.5"/>
+  <path d="M212 424 L204 452 M300 424 L308 452" stroke="#2c2e26" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="92" cy="404" rx="30" ry="18" transform="rotate(48 92 404)" fill="url(#ras-vent)" stroke="#111" stroke-width="4"/>
+  <ellipse cx="420" cy="404" rx="30" ry="18" transform="rotate(-48 420 404)" fill="url(#ras-vent)" stroke="#111" stroke-width="4"/>
+  <path d="M196 470 C232 482 280 482 316 470 L306 456 C274 464 238 464 206 456 Z" fill="#2c2e26" stroke="#111" stroke-width="3"/>
+  <circle cx="176" cy="456" r="5" fill="#1a1b16"/><circle cx="336" cy="456" r="5" fill="#1a1b16"/>
+  <!-- FACE -->
+</svg>

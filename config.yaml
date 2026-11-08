@@ -1,0 +1,185 @@
+# JARVIS config. Secrets are NOT here — they live in the OS keychain (see README).
+server:
+  host: 127.0.0.1
+  port: 18765
+
+capital:
+  env: demo            # demo | live  (prices only in Phase 1 — no orders, ever, from Signal Station)
+  candle_poll_seconds: 60
+  # internal symbol -> Capital.com epic, pip size, max spread allowed (in pips)
+  # ccy = calendar currencies that trigger this instrument's news blackout; cot = CFTC contract code;
+  # round = round-number step for the round-number scalp (majors 00 levels, gold 00/50, ...)
+  instruments:
+    GBP_USD: {epic: GBPUSD,    pip: 0.0001, max_spread: 2.5, ccy: [GBP, USD], cot: "096742", round: 0.01}
+    EUR_USD: {epic: EURUSD,    pip: 0.0001, max_spread: 1.5, ccy: [EUR, USD], cot: "099741", round: 0.01}
+    USD_JPY: {epic: USDJPY,    pip: 0.01,   max_spread: 2.0, ccy: [USD, JPY], cot: "097741", round: 1.0}
+    XAU_USD: {epic: GOLD,      pip: 0.1,    max_spread: 6.0, ccy: [USD],      cot: "088691", round: 50}
+    XAG_USD: {epic: SILVER,    pip: 0.01,   max_spread: 4.0, ccy: [USD],      cot: "084691", round: 0.5}
+    WTI_USD: {epic: OIL_CRUDE, pip: 0.01,   max_spread: 5.0, ccy: [USD],      cot: "067651", round: 1.0}
+  # extra DXY components (1H only) — DXY is computed from these + EUR/JPY/GBP above
+  dxy_extra: {USD_CAD: USDCAD, USD_SEK: USDSEK, USD_CHF: USDCHF}
+
+station:
+  min_confidence: 60       # below this the commander issues HOLD
+  weights: {technical: 1.0, macro: 0.6, news: 0.4, sentiment: 0.3}
+  news_vote: shadow        # shadow = log what the news vote would have done, without acting on it | live
+  conflict_score: 30       # fundamentals' weighted score this far against technicals -> HOLD
+  support_factor: 0.4      # how much agreeing/opposing fundamentals move technical confidence
+  usdjpy_intervention: 158 # USD/JPY above this: MoF intervention risk flagged
+  intraday:
+    expiry_hours: 12
+    stop_atr: 1.5          # stop = 1.5 x ATR(1H)
+    tp_r: [2.0, 3.0]       # TP1 / TP2 in multiples of risk
+  risk:
+    min_rr: 1.5            # net of spread
+    adx_chop: 18           # 1H ADX below this = choppy -> HOLD
+    vol_spike: 2.0         # 15M ATR above 2x its 1-day median -> HOLD
+    stale_minutes: 45      # no closed 15M candle this recent -> market closed
+    blackout_before: 30    # minutes before a high-impact event
+    blackout_after: 15     # minutes after
+
+macro:
+  calendar_url: https://nfs.faireconomy.media/ff_calendar_thisweek.json
+  calendar_poll_minutes: 30   # ForexFactory asks for light polling
+  yields_poll_minutes: 180    # FRED daily series
+  cot_poll_hours: 12          # CFTC weekly report
+
+news:
+  poll_minutes: 10
+  analyse_minutes: 15         # Claude reads new headlines at most this often
+  model: claude-haiku-5-5
+  max_age_hours: 12
+  feeds:
+    - {name: FXStreet, url: "https://www.fxstreet.com/rss/news"}
+    - {name: CNBC, url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"}
+    - {name: OilPrice, url: "https://oilprice.com/rss/main"}
+    - {name: Google News, url: "https://news.google.com/rss/search?q=markets+(dollar+OR+gold+OR+oil+OR+yen+OR+fed)+when:1d&hl=en-US&gl=US&ceid=US:en"}
+
+briefings:
+  tz: Asia/Bahrain
+  morning: "08:00"
+  eod: "23:30"
+
+crypto:
+  enabled: false      # crypto desk (scanner, scalps, execution) off; Ras focuses on FX, metals and oil
+  exchange: binance    # any CCXT exchange id with websocket support
+  symbol: BTC/USDT
+  timeframe: 1m
+  history: 300         # candles to seed the chart with
+  scanner:
+    markets: {spot: binance, perp: binanceusdm}   # CCXT ids; perp = USDT-margined perpetuals
+    watchlist_size: 30         # per market, by 24h quote volume, refreshed hourly
+    min_volume_usd: 50000000
+    max_spread_pct: 0.05
+    min_atr_pct: 0.15          # 5m ATR as % of price
+    min_listing_days: 30
+    exclude_bases: [USDC, FDUSD, TUSD, USDP, DAI, BUSD, EUR, USDE, USD1, XUSD, PAXG, XAUT]
+    poll_seconds: 60
+    fees_pct: {spot: 0.10, perp: 0.05}   # taker, per side
+    slippage_pct: 0.02
+    btc_corr_min: 0.6          # alts this correlated to BTC can't trade against BTC's 5m trend
+
+scalp:
+  default_modes: {intraday: true, scalp: true}
+  min_score: 60
+  expiry_minutes: 12         # entry window shown as a countdown
+  runaway_r: 0.5             # entry window closes if price runs this far past the entry zone
+  time_stop_bars: 10         # exit if not +0.5R within N 1M candles
+  max_hold_minutes: 60
+  stop_atr: 1.0              # min stop = 1.0 x ATR(5M)
+  tp_r: [1.8, 2.5]
+  max_spread_tp_pct: 20      # spread may be at most 20% of the TP1 distance
+  spread_widen_x: 2.0        # live spread > 2x its 1h median = widened (news / rollover)
+  rollover_minutes: 15       # no scalps within 15 min either side of 17:00 New York
+  dxy_spike_pct: 0.12        # USD basket move over 15 min that blocks fading-USD scalps
+  blackout_before: 30
+  blackout_after: 20
+  limits:                    # separate from intraday; R = initial risk
+    fx:     {daily_loss_r: 3, max_per_day: 10, max_per_session: 4, max_concurrent: 2, cooldown_losses: 2, cooldown_minutes: 30}
+    crypto: {daily_loss_r: 3, max_per_day: 15, max_per_session: 99, max_concurrent: 3, cooldown_losses: 2, cooldown_minutes: 30}
+  max_same_exposure: 3       # correlation guard: more same-direction USD (or crypto beta) exposure than this = veto
+  sessions:                  # local exchange times; DST handled by the time zone
+    tokyo:       {tz: Asia/Tokyo,       start: "09:00", end: "15:00"}
+    london:      {tz: Europe/London,    start: "08:00", end: "16:30"}
+    new_york:    {tz: America/New_York, start: "08:00", end: "17:00"}
+    london_open: {tz: Europe/London,    start: "07:00", end: "10:00"}
+    ny_open:     {tz: America/New_York, start: "08:00", end: "11:00"}
+
+paper:
+  auto_follow: true          # every BUY/SELL signal opens a simulated position (no real orders, ever)
+  # small, realistic account: sizes follow Capital.com's min size / step / margin; a trade whose minimum size would
+  # risk more than max_risk_pct is skipped (and journaled). Settings -> Paper account starts a fresh one.
+  fx:     {balance: 100, currency: USD,  risk_pct: 0.5, max_risk_pct: 2.0, slippage_pips: 0.2}
+  crypto: {balance: 10000, currency: USDT, risk_pct: 0.5, max_leverage: 3}
+  # account-wide safety limits (percent of the account). A broken daily or drawdown limit pauses new trades until you resume.
+  limits: {max_open_risk_pct: 12, max_cluster_risk_pct: 6, daily_loss_pct: 5, drawdown_pct: 30}
+
+backtest:
+  threshold_grid: [50, 55, 60, 65, 70, 75, 80]   # walk-forward picks the best score threshold in-sample
+  folds: 3
+  min_trades_is: 5           # fewer in-sample trades than this -> keep the configured threshold
+  crypto_spread_pct: 0.02    # OHLCV has no bid/ask: modelled spread
+
+exits:
+  partial: 0.0               # 0 = close everything at TP1; 0.5 = bank half at TP1, stop to entry, rest runs to TP2
+                             # (Performance -> Edge scan compares both on your data; Settings/Edge scan can switch it)
+
+forward_test:                # live paper results vs the backtest, from the day the paper account started
+  target_trades: 50
+  min_trades: 20             # per instrument + mode before it gets a verdict
+
+learning:
+  lookback: 100              # last N closed intraday signals
+  min_samples: 20            # graded votes an agent needs before its weight moves
+  lr: 0.1
+  max_step: 0.05             # weights move at most this much per closed trade
+  scalp_min_samples: 10      # closed scalps a strategy needs before its score adjustment moves
+  min_weight: 0.1
+  max_weight: 1.5
+
+review:
+  model: claude-opus-5-5
+  weekday: 5                 # Saturday (Mon=0), Bahrain time
+  at: "10:00"
+
+voice:
+  enabled: true              # mic + speaker in the backend; text chat works either way
+  models_dir: data/models
+  input_device: null         # null = system default (sounddevice name or index)
+  output_device: null
+  wake_threshold: 0.5        # openWakeWord "hey_jarvis" score
+  tts_voice: af_bella        # Kokoro American female
+  tts_robot: 0.2             # robot effect: 0 = natural voice, 1 = full robot (above 0.8 gets hard to follow)
+  tts_pitch: 3               # semitones up; higher sounds younger and smaller (above about 5 turns chipmunk)
+  tts_speed: 1.05
+  whisper_model: base.en
+  max_listen_seconds: 12
+  silence_ms: 800            # end of utterance
+  min_priority: 2            # quiet mode baseline: 1 = also crypto signals, 2 = Signal Station, 3 = scalps only, 4 = risk only
+  # priorities: 1 crypto/outcomes, 2 intraday + briefings, 3 FX scalps, 4 risk warnings, 5 replies to you
+  llm:
+    order: [claude, ollama]  # first that answers wins
+    claude_model: claude-opus-5-5
+    claude_effort: low
+    ollama_model: qwen3:1.7b   # fits an 8 GB Mac; Ras skips any local model too big for the memory
+    ollama_url: http://127.0.0.1:11434
+    history_turns: 6
+
+execution:                   # approval-based crypto execution — off until you enable it with the typed phrase
+  venue: binanceusdm         # USDT-margined perpetuals; spot signals stay paper-only
+  environment: demo          # Binance Demo Trading only (live is deliberately not selectable yet)
+  confirm_phrase: ENABLE DEMO EXECUTION
+  risk_pct: 0.5              # of the exchange account's free USDT, per trade
+  max_risk_pct: 2.0          # MODIFY can't go above this
+  max_notional_usdt: 500     # hard cap per trade
+  leverage: 3
+  margin_mode: isolated
+  trailing_pct: null         # e.g. 0.8 adds a trailing stop alongside SL/TP
+  max_adverse_r: 0.25        # refuse APPROVE if price already moved this far against the entry
+  monitor_seconds: 5
+
+telegram:
+  min_priority: 3            # 3 = FX scalps, risk warnings; executions and kill switch always go
+
+# optional: a URL Ras pings every 30s (e.g. healthchecks.io), so an outside service can alert you when the Mac or Ras goes down
+heartbeat_url: ""

@@ -1,0 +1,15 @@
+{
+  "signature": "<path d='M156 198 L210 190 L204 268' /><path d='M356 198 L302 190 L308 268' />",
+  "bars": "<path d='M186 190 V272' /><path d='M326 190 V272' />",
+  "surprised": "<path d='M186 204 V270' /><path d='M326 204 V270' /><path d='M158 188 Q186 160 214 188' stroke-width='8' /><path d='M298 188 Q326 160 354 188' stroke-width='8' />",
+  "wink": "<path d='M148 206 L224 232' /><rect x='296' y='194' width='62' height='62' rx='14' class='fill' />",
+  "angry": "<path d='M146 188 Q172 214 222 214' stroke-width='11' /><path d='M366 188 Q340 214 290 214' stroke-width='11' /><rect x='166' y='220' width='52' height='36' rx='5' class='fill' /><rect x='294' y='220' width='52' height='36' rx='5' class='fill' />",
+  "skeptical": "<path d='M148 228 L222 216' stroke-width='10' /><rect x='166' y='224' width='54' height='30' rx='4' class='fill' /><path d='M286 208 L366 182' stroke-width='10' /><rect x='296' y='202' width='56' height='56' rx='4' class='fill' />",
+  "content": "<path d='M146 218 Q164 256 226 244' /><path d='M366 218 Q348 256 286 244' />",
+  "joy": "<path d='M150 244 Q186 192 222 244' /><path d='M290 244 Q326 192 362 244' />",
+  "sleepy": "<path d='M156 236 Q186 276 216 236' /><path d='M296 236 Q326 276 356 236' />",
+  "square": "<rect x='156' y='196' width='60' height='68' rx='16' class='fill' /><rect x='296' y='196' width='60' height='68' rx='16' class='fill' />",
+  "xx": "<path d='M156 200 L216 262 M216 200 L156 262' /><path d='M296 200 L356 262 M356 200 L296 262' />",
+  "calm": "<circle cx='170' cy='232' r='20' class='fill' /><circle cx='342' cy='232' r='20' class='fill' /><path d='M170 232 H342' stroke-width='6' />",
+  "wince": "<path d='M156 200 L218 232 L156 264' /><path d='M356 200 L294 232 L356 264' />"
+}
