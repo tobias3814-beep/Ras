@@ -22,7 +22,7 @@ find "$OUT/runtime/app" -name __pycache__ -prune -exec rm -rf {} +
 cp config.yaml "$OUT/runtime/config.yaml"
 (cd app && npm run build --silent)
 cp -R app/dist "$OUT/runtime/web"
-cp windows/Ras.vbs windows/*.bat windows/README-WINDOWS.txt "$OUT/"
+cp windows/Ras.vbs windows/*.bat windows/README-WINDOWS.txt windows/LICENSE.txt "$OUT/"
 cp assets/app-icon.png "$OUT/runtime/jarvis.png"
 cp app/src-tauri/icons/icon.ico "$OUT/runtime/ras.ico"
 echo "==> zip"
